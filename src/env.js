@@ -21,6 +21,8 @@ export const env = createEnv({
 	 */
 	client: {
 		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
+		PORT: z.number().optional(),
+		VERCEL_URL: z.string().url().optional(),
 	},
 	/*
 	 * Due to how Next.js bundles environment variables on Edge and Client,
@@ -34,5 +36,7 @@ export const env = createEnv({
 		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
 			process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
 		CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
+		PORT: process.env.PORT,
+		VERCEL_URL: process.env.VERCEL_URL,
 	},
 });
