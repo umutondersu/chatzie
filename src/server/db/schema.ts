@@ -1,8 +1,7 @@
-import { mysqlTable, serial, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { boolean, mysqlTable, serial, varchar } from "drizzle-orm/mysql-core";
 
-export const users = mysqlTable("users", {
+export const todos = mysqlTable("todos", {
 	id: serial("id").primaryKey().notNull(),
-	name: varchar("name", { length: 256 }),
-	email: varchar("email", { length: 256 }),
-	createdAt: timestamp("createdAt", { mode: "string" }).defaultNow(),
+	content: varchar("content", { length: 256 }),
+	done: boolean("done").default(false),
 });
