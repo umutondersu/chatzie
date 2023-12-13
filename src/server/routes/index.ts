@@ -1,5 +1,5 @@
 import { router } from "../trpc";
-import { TodosRouter } from "./getTodos";
+import TodosRouter from "./todosRouter";
 
 export const appRouter = router({
 	Todos: TodosRouter,
