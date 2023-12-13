@@ -3,10 +3,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink, loggerLink } from "@trpc/client";
 import React, { useState } from "react";
 
-import { trpc } from "./_trpc/client";
+import { trpc } from "./client";
 import getBaseUrl from "@/utils/getBaseUrl";
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+export default function TRPCProvider({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
 	const [queryClient] = useState(() => new QueryClient({}));
 	const [trpcClient] = useState(() =>
 		trpc.createClient({
