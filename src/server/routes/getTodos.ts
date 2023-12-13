@@ -1,8 +1,8 @@
 import { todos } from "../db/schema";
-import { publicProsedure, router } from "../trpc";
+import { publicProcedure, router } from "../trpc";
 
 export const TodosRouter = router({
-	get: publicProsedure.query(async ({ ctx }) => {
+	get: publicProcedure.query(async ({ ctx }) => {
 		return await ctx.db.select().from(todos);
 	}),
 });
