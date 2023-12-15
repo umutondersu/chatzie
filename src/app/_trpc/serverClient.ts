@@ -1,3 +1,5 @@
+import "server-only";
+
 import { appRouter } from "@/server/routes";
 import createTRPCContext from "@/server/context";
 
