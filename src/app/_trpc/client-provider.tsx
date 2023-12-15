@@ -4,16 +4,6 @@ import { httpBatchLink, loggerLink } from "@trpc/client";
 import React, { useState } from "react";
 
 import { trpc } from "./client";
-import { env } from "@/env";
-
-const getBaseUrl = () => {
-	if (typeof window !== "undefined") return ""; // browser should use relative url
-
-	if (env.NODE_ENV === "development")
-		return `http://localhost:${env.PORT ?? 3000}`; // dev SSR should use localhost
-
-	if (env.VERCEL_URL) return `https://${env.VERCEL_URL}`; // SSR should use vercel url
-};
 
 export default function TRPCProvider({
 	children,
@@ -26,9 +16,10 @@ export default function TRPCProvider({
 			links: [
 				loggerLink({
 					enabled: () => true,
+					// TODO: disable on development
 				}),
 				httpBatchLink({
-					url: `${getBaseUrl()}/api/trpc`,
+					url: "/api/trpc",
 				}),
 			],
 		})

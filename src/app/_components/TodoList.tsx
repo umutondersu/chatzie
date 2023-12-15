@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { api } from "../_trpc/serverClient";
+import type { Api } from "../_trpc/serverClient";
 import { trpc } from "../_trpc/client";
 
 export default function TodoList({
 	initialTodos,
 }: {
-	initialTodos: Awaited<ReturnType<(typeof api)["Todos"]["get"]>>;
+	initialTodos: Awaited<ReturnType<Api["Todos"]["get"]>>;
 }) {
 	const getTodos = trpc.Todos.get.useQuery(undefined, {
 		initialData: initialTodos,
@@ -22,6 +22,15 @@ export default function TodoList({
 	const setDone = trpc.Todos.setDone.useMutation({
 		onSettled: () => {
 			getTodos.refetch();
+		},
+	});
+
+	const removeTodo = trpc.Todos.remove.useMutation({
+		onSettled: () => {
+			getTodos.refetch();
+		},
+		onError: (error) => {
+			alert(error.message);
 		},
 	});
 
@@ -47,6 +56,13 @@ export default function TodoList({
 						<label htmlFor={`check-${todo.id}`}>
 							{todo.content}
 						</label>
+						<button
+							onClick={() => {
+								removeTodo.mutate(todo.id);
+							}}
+							className="bg-red-500 hover:bg-red-700 text-white font-bold rounded-full text-sm px-2">
+							Delete
+						</button>
 					</div>
 				))}
 			</div>

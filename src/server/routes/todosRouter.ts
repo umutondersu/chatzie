@@ -1,5 +1,5 @@
 import * as table from "../db/schema";
-import { publicProcedure, router } from "../trpc";
+import { publicProcedure, protectedProcedure, router } from "../trpc";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 
@@ -26,6 +26,15 @@ const TodosRouter = router({
 				.update(table.todos)
 				.set({ done: input.done })
 				.where(eq(table.todos.id, input.id))
+				.execute();
+			return true;
+		}),
+	remove: protectedProcedure
+		.input(z.number())
+		.mutation(async ({ ctx, input }) => {
+			await ctx.db
+				.delete(table.todos)
+				.where(eq(table.todos.id, input))
 				.execute();
 			return true;
 		}),

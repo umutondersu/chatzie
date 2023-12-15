@@ -7,7 +7,7 @@ const handler = (req: Request) =>
 		endpoint: "/api/trpc",
 		req,
 		router: appRouter,
-		createContext: createTRPCContext,
+		createContext: () => createTRPCContext({ req }),
 		onError({ error }) {
 			if (error.code === "INTERNAL_SERVER_ERROR") {
 				console.error("Caught TRPC error:", error);
