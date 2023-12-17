@@ -1,35 +1,57 @@
 "use client";
 
-import React, { useState } from "react";
-import type { Api } from "../_trpc/serverClient";
+import { useState } from "react";
 import { trpc } from "../_trpc/client";
+import { useQueryClient } from "@tanstack/react-query";
+import { getQueryKey } from "@trpc/react-query";
+import type { TodoList } from "@/definitions";
+import OptimisticMutationHelper from "./OptimisticMutationHelper";
 
-export default function TodoList({
-	initialTodos,
-}: {
-	initialTodos: Awaited<ReturnType<Api["Todos"]["get"]>>;
-}) {
-	const getTodos = trpc.Todos.get.useQuery(undefined, {
+export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
+	const queryClient = useQueryClient();
+	const Todos = trpc.Todos.get.useQuery(undefined, {
 		initialData: initialTodos,
 		refetchOnMount: false,
 		refetchOnReconnect: false,
 	});
+	const todosQueryKey = getQueryKey(trpc.Todos.get, undefined, "query");
+	const QueryContext = { todosQueryKey, queryClient };
+
 	const addTodo = trpc.Todos.add.useMutation({
+		onMutate: async (newTodo) =>
+			OptimisticMutationHelper(QueryContext, (prevstate) => [
+				...prevstate,
+				{ id: prevstate.length + 1, done: false, content: newTodo },
+			]),
+		onError: (_error, _newTodo, context) => {
+			queryClient.setQueryData(todosQueryKey, context!.previousTodos);
+		},
 		onSettled: () => {
-			getTodos.refetch();
+			queryClient.invalidateQueries(todosQueryKey);
 		},
 	});
+
 	const setDone = trpc.Todos.setDone.useMutation({
+		onMutate: async ({ id, done }) =>
+			OptimisticMutationHelper(QueryContext, (prevstate) =>
+				prevstate.map((todo) =>
+					todo.id === id ? { ...todo, done: !done } : todo
+				)
+			),
 		onSettled: () => {
-			getTodos.refetch();
+			queryClient.invalidateQueries(todosQueryKey);
+		},
+		onError: (error, _newTodo, context) => {
+			alert(error.message);
+			queryClient.setQueryData(["todos"], context!.previousTodos);
 		},
 	});
 
 	const removeTodo = trpc.Todos.remove.useMutation({
 		onSettled: () => {
-			getTodos.refetch();
+			Todos.refetch();
 		},
-		onError: (error) => {
+		onError: (error, _newTodo, context) => {
 			alert(error.message);
 		},
 	});
@@ -39,7 +61,7 @@ export default function TodoList({
 	return (
 		<div>
 			<div className="text-black my-5 text-3xl">
-				{getTodos.data.map((todo) => (
+				{Todos.data.map((todo) => (
 					<div key={todo.id} className="flex gap-3 items-center">
 						<input
 							id={`check-${todo.id}`}
