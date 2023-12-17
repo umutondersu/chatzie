@@ -4,6 +4,7 @@ import { httpBatchLink, loggerLink } from "@trpc/client";
 import React, { useState } from "react";
 import { env } from "@/env";
 import { trpc } from "./client";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export default function TRPCProvider({
 	children,
@@ -27,6 +28,9 @@ export default function TRPCProvider({
 		<trpc.Provider client={trpcClient} queryClient={queryClient}>
 			<QueryClientProvider client={queryClient}>
 				{children}
+				{env.NEXT_PUBLIC_ENV === "development" && (
+					<ReactQueryDevtools initialIsOpen={false} />
+				)}
 			</QueryClientProvider>
 		</trpc.Provider>
 	);
