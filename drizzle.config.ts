@@ -2,15 +2,15 @@ import { type Config } from "drizzle-kit";
 
 import { env } from "@/env";
 
-if (!env.DATABASE_URL) {
-	throw new Error("DATABASE_URL is not set");
+if (!env.DATABASE_URL || !env.DATABASE_AUTH_TOKEN) {
+	throw new Error("Database Credentials are not set");
 }
 
 export default {
 	schema: "./src/server/db/schema.ts",
-	driver: "mysql2",
+	driver: "turso",
 	dbCredentials: {
-		uri: env.DATABASE_URL,
+		url: env.DATABASE_URL,
+		authToken: env.DATABASE_AUTH_TOKEN,
 	},
-	tablesFilter: ["testt3_*"],
 } satisfies Config;

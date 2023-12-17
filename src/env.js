@@ -9,6 +9,7 @@ export const env = createEnv({
 	server: {
 		DATABASE_URL: z.string().url(),
 		CLERK_SECRET_KEY: z.string(),
+		DATABASE_AUTH_TOKEN: z.string().min(1),
 	},
 	/*
 	 * Environment variables available on the client (and server).
@@ -29,6 +30,7 @@ export const env = createEnv({
 	 */
 	runtimeEnv: {
 		DATABASE_URL: process.env.DATABASE_URL,
+		DATABASE_AUTH_TOKEN: process.env.DATABASE_AUTH_TOKEN,
 		NEXT_PUBLIC_ENV: process.env.NEXT_PUBLIC_ENV,
 		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
 			process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,

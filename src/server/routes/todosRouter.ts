@@ -10,14 +10,18 @@ const TodosRouter = router({
 	add: publicProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
 		await ctx.db
 			.insert(table.todos)
-			.values({ content: input, done: false })
-			.execute();
+			.values({
+				id: crypto.randomUUID(),
+				content: input,
+				done: false,
+			})
+			.run();
 		return true;
 	}),
 	setDone: publicProcedure
 		.input(
 			z.object({
-				id: z.number(),
+				id: z.string(),
 				done: z.boolean(),
 			})
 		)
@@ -26,16 +30,16 @@ const TodosRouter = router({
 				.update(table.todos)
 				.set({ done: input.done })
 				.where(eq(table.todos.id, input.id))
-				.execute();
+				.run();
 			return true;
 		}),
 	remove: protectedProcedure
-		.input(z.number())
+		.input(z.string())
 		.mutation(async ({ ctx, input }) => {
 			await ctx.db
 				.delete(table.todos)
 				.where(eq(table.todos.id, input))
-				.execute();
+				.run();
 			return true;
 		}),
 });

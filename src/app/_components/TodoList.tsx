@@ -14,6 +14,7 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 		refetchOnMount: false,
 		refetchOnReconnect: false,
 	});
+
 	const todosQueryKey = getQueryKey(trpc.Todos.get, undefined, "query");
 	const QueryContext = { todosQueryKey, queryClient };
 
@@ -21,7 +22,11 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 		onMutate: async (newTodo) =>
 			OptimisticMutationHelper(QueryContext, (prevstate) => [
 				...prevstate,
-				{ id: prevstate.length + 1, done: false, content: newTodo },
+				{
+					id: "OPTIMISTIC_".concat(crypto.randomUUID()),
+					done: false,
+					content: newTodo,
+				},
 			]),
 		onError: (_error, _newTodo, context) => {
 			queryClient.setQueryData(todosQueryKey, context!.previousTodos);

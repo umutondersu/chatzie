@@ -1,7 +1,7 @@
-import { boolean, mysqlTable, serial, varchar } from "drizzle-orm/mysql-core";
+import { text, integer, sqliteTable } from "drizzle-orm/sqlite-core";
 
-export const todos = mysqlTable("todos", {
-	id: serial("id").primaryKey().notNull(),
-	content: varchar("content", { length: 256 }).notNull(),
-	done: boolean("done").default(false).notNull(),
+export const todos = sqliteTable("todos", {
+	id: text("id").primaryKey().notNull(),
+	content: text("content").notNull(),
+	done: integer("done", { mode: "boolean" }).notNull().default(false),
 });
