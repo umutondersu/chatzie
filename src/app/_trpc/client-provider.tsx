@@ -2,7 +2,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink, loggerLink } from "@trpc/client";
 import React, { useState } from "react";
-
+import { env } from "@/env";
 import { trpc } from "./client";
 
 export default function TRPCProvider({
@@ -15,8 +15,7 @@ export default function TRPCProvider({
 		trpc.createClient({
 			links: [
 				loggerLink({
-					enabled: () => true,
-					// TODO: disable on development
+					enabled: () => env.NEXT_PUBLIC_ENV === "development",
 				}),
 				httpBatchLink({
 					url: "/api/trpc",
