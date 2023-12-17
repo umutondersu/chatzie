@@ -38,20 +38,20 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 					todo.id === id ? { ...todo, done: !done } : todo
 				)
 			),
-		onSettled: () => {
-			queryClient.invalidateQueries(todosQueryKey);
-		},
 		onError: (error, _newTodo, context) => {
 			alert(error.message);
-			queryClient.setQueryData(["todos"], context!.previousTodos);
+			queryClient.setQueryData(todosQueryKey, context!.previousTodos);
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries(todosQueryKey);
 		},
 	});
 
 	const removeTodo = trpc.Todos.remove.useMutation({
 		onSettled: () => {
-			Todos.refetch();
+			queryClient.invalidateQueries(todosQueryKey);
 		},
-		onError: (error, _newTodo, context) => {
+		onError: (error, _newTodo) => {
 			alert(error.message);
 		},
 	});
