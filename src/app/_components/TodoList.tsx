@@ -5,7 +5,7 @@ import { trpc } from "../_trpc/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { getQueryKey } from "@trpc/react-query";
 import type { TodoList } from "@/definitions";
-import OptimisticMutationHelper from "./OptimisticMutationHelper";
+import OptimisticMutationHelper from "@/utils/OptimisticMutationHelper";
 
 export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 	const queryClient = useQueryClient();
