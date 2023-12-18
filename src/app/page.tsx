@@ -1,18 +1,27 @@
-import TodoList from "./_components/TodoList";
-import UserPanel from "./_components/UserPanel";
-import { api } from "./_trpc/serverClient";
+import { SignInButton } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
+import TodoListPanel from "./_components/TodoListPanel";
 
 export default async function Home() {
-	//TODO: make todolist unique per user with auth
-	const todos = await api.Todos.get();
+	const user = await currentUser();
 	return (
 		<main className="max-w-3xl mx-auto mt-5">
 			<h1 className="text-2xl mb-3">
 				<span className="font-bold text-3xl">Chatzie</span> a Todo App
 			</h1>
 			<div className="border border-double p-2">
-				<TodoList initialTodos={todos} />
-				<UserPanel />
+				{user ? (
+					<TodoListPanel />
+				) : (
+					<>
+						<div className="text-center">
+							Please sign in to be able to use the app
+						</div>
+						<div className="flex items-center justify-center [&>*]:bg-blue-500 [&>*]:hover:bg-blue-700 [&>*]:text-white [&>*]:font-bold [&>*]:py-2 [&>*]:px-4 [&>*]:rounded-full mt-2">
+							<SignInButton />
+						</div>
+					</>
+				)}
 			</div>
 			<section className="relative top-10">
 				<div className="underline text-2xl mb-2">Technologies used</div>

@@ -53,11 +53,15 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 	});
 
 	const removeTodo = trpc.Todos.remove.useMutation({
+		onMutate: async (newTodo) =>
+			OptimisticMutationHelper(QueryContext, (prevstate) =>
+				prevstate.filter((todo) => todo.id !== newTodo)
+			),
+		onError: (_error, _newTodo, context) => {
+			queryClient.setQueryData(todosQueryKey, context!.previousTodos);
+		},
 		onSettled: () => {
 			queryClient.invalidateQueries(todosQueryKey);
-		},
-		onError: (error, _newTodo) => {
-			alert(error.message);
 		},
 	});
 
@@ -99,7 +103,7 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 					id="content"
 					value={content}
 					onChange={(e) => setContent(e.target.value)}
-					className="flex-grow text-black bg-white rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 px-4 py-2"
+					className="flex-grow text-black bg-white rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 px-4 py-2"
 				/>
 				<button
 					onClick={async () => {

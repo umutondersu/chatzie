@@ -11,10 +11,10 @@ const t = initTRPC.context<typeof createTRPCContext>().create({});
 
 // Base router and procedure helpers
 export const router = t.router;
-export const publicProcedure = t.procedure;
+// export const publicProcedure = t.procedure;
 
 // Middlewares
-const isAuthedMiddleware = t.middleware(async ({ next }) => {
+const userMiddleware = t.middleware(async ({ next }) => {
 	const user = await currentUser();
 	if (!user) {
 		throw new TRPCError({
@@ -24,28 +24,10 @@ const isAuthedMiddleware = t.middleware(async ({ next }) => {
 	}
 	return next({
 		ctx: {
-			user: user,
+			userid: user.id,
 		},
 	});
 });
 
 // Protected procedures using middlewares
-export const protectedProcedure = t.procedure.use(isAuthedMiddleware);
-
-// import { auth as Authentication } from "@clerk/nextjs/server";
-// const isAuthed = userCheckMiddleware.unstable_pipe(({ next }) => {
-// 	const auth = Authentication();
-// 	const canManage = auth.has({ permission: "org:team_settings:manage" });
-// 	if (!canManage) {
-// 		throw new TRPCError({
-// 			code: "UNAUTHORIZED",
-// 			message: "Not authenticated",
-// 		});
-// 	}
-// 	return next({
-// 		ctx: {
-// 			auth: auth,
-// 		},
-// 	});
-// });
-// export const AuthedProcedure = t.procedure.use(isAuthed);
+export const protectedProcedure = t.procedure.use(userMiddleware);
