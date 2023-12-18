@@ -70,32 +70,38 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 	return (
 		<div>
 			<div className="text-black my-5 text-3xl">
-				{Todos.data.map((todo) => (
-					<div key={todo.id} className="flex gap-3 items-center">
-						<input
-							id={`check-${todo.id}`}
-							type="checkbox"
-							checked={todo.done}
-							style={{ zoom: 1.5 }}
-							onChange={async () => {
-								setDone.mutate({
-									id: todo.id,
-									done: todo.done ? false : true,
-								});
-							}}
-						/>
-						<label htmlFor={`check-${todo.id}`}>
-							{todo.content}
-						</label>
-						<button
-							onClick={() => {
-								removeTodo.mutate(todo.id);
-							}}
-							className="bg-red-500 hover:bg-red-700 text-white font-bold rounded-full text-sm px-2">
-							Delete
-						</button>
+				{Todos.data.length != 0 ? (
+					Todos.data.map((todo) => (
+						<div key={todo.id} className="flex gap-3 items-center">
+							<input
+								id={`check-${todo.id}`}
+								type="checkbox"
+								checked={todo.done}
+								style={{ zoom: 1.5 }}
+								onChange={async () => {
+									setDone.mutate({
+										id: todo.id,
+										done: todo.done ? false : true,
+									});
+								}}
+							/>
+							<label htmlFor={`check-${todo.id}`}>
+								{todo.content}
+							</label>
+							<button
+								onClick={() => {
+									removeTodo.mutate(todo.id);
+								}}
+								className="bg-red-500 hover:bg-red-700 text-white font-bold rounded-full text-sm px-2">
+								Delete
+							</button>
+						</div>
+					))
+				) : (
+					<div className="text-center">
+						No tasks yet. You can start adding some!
 					</div>
-				))}
+				)}
 			</div>
 			<div className="flex gap-3 items-center">
 				<label htmlFor="content">Content</label>
