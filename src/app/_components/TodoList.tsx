@@ -23,9 +23,10 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 			OptimisticMutationHelper(QueryContext, (prevstate) => [
 				...prevstate,
 				{
-					id: "OPTIMISTIC_".concat(crypto.randomUUID()),
+					id: "OPTIMISTIC_ID",
 					done: false,
 					content: newTodo,
+					userid: "OPTIMISTIC_USERID",
 				},
 			]),
 		onError: (_error, _newTodo, context) => {

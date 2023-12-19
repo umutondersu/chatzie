@@ -3,7 +3,6 @@ import { api } from "../_trpc/serverClient";
 import TodoList from "./TodoList";
 
 export default async function TodoListPanel() {
-	//TODO: make todolist unique per user
 	const todos = await api.Todos.get();
 	return (
 		<>

@@ -1,11 +1,14 @@
 import * as table from "../db/schema";
 import { protectedProcedure, router } from "../trpc";
 import { z } from "zod";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 const TodosRouter = router({
 	get: protectedProcedure.query(async ({ ctx }) => {
-		return await ctx.db.select().from(table.todos);
+		return await ctx.db
+			.select()
+			.from(table.todos)
+			.where(eq(table.todos.userid, ctx.userid));
 	}),
 	add: protectedProcedure
 		.input(z.string())
@@ -16,6 +19,7 @@ const TodosRouter = router({
 					id: crypto.randomUUID(),
 					content: input,
 					done: false,
+					userid: ctx.userid,
 				})
 				.run();
 			return true;
@@ -31,7 +35,12 @@ const TodosRouter = router({
 			await ctx.db
 				.update(table.todos)
 				.set({ done: input.done })
-				.where(eq(table.todos.id, input.id))
+				.where(
+					and(
+						eq(table.todos.id, input.id),
+						eq(table.todos.userid, ctx.userid)
+					)
+				)
 				.run();
 			return true;
 		}),
@@ -40,7 +49,12 @@ const TodosRouter = router({
 		.mutation(async ({ ctx, input }) => {
 			await ctx.db
 				.delete(table.todos)
-				.where(eq(table.todos.id, input))
+				.where(
+					and(
+						eq(table.todos.id, input),
+						eq(table.todos.userid, ctx.userid)
+					)
+				)
 				.run();
 			return true;
 		}),
