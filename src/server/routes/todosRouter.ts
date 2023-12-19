@@ -13,15 +13,12 @@ const TodosRouter = router({
 	add: protectedProcedure
 		.input(z.string())
 		.mutation(async ({ ctx, input }) => {
-			await ctx.db
-				.insert(table.todos)
-				.values({
-					id: crypto.randomUUID(),
-					content: input,
-					done: false,
-					userid: ctx.userid,
-				})
-				.run();
+			await ctx.db.insert(table.todos).values({
+				id: crypto.randomUUID(),
+				content: input,
+				done: false,
+				userid: ctx.userid,
+			});
 			return true;
 		}),
 	setDone: protectedProcedure
@@ -40,8 +37,7 @@ const TodosRouter = router({
 						eq(table.todos.id, input.id),
 						eq(table.todos.userid, ctx.userid)
 					)
-				)
-				.run();
+				);
 			return true;
 		}),
 	remove: protectedProcedure
@@ -54,8 +50,7 @@ const TodosRouter = router({
 						eq(table.todos.id, input),
 						eq(table.todos.userid, ctx.userid)
 					)
-				)
-				.run();
+				);
 			return true;
 		}),
 });
