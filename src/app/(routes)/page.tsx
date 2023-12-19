@@ -28,7 +28,10 @@ export default async function Home() {
 				<ul className="[&>*]:text-xl">
 					<li>- Next.js</li>
 					<li>- tRPC </li>
-					<li>- React Query for Data Management</li>
+					<>
+						- React Query for State Management, data fetching and
+						caching
+					</>
 					<li>- Clerk for Authentication</li>
 					<li>- Turso for DB on the Edge</li>
 					<li>- Drizzle ORM</li>

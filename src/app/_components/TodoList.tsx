@@ -54,9 +54,9 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 	});
 
 	const removeTodo = trpc.Todos.remove.useMutation({
-		onMutate: async (newTodo) =>
+		onMutate: async (todoId) =>
 			OptimisticMutationHelper(QueryContext, (prevstate) =>
-				prevstate.filter((todo) => todo.id !== newTodo)
+				prevstate.filter((todo) => todo.id !== todoId)
 			),
 		onError: (_error, _newTodo, context) => {
 			queryClient.setQueryData(todosQueryKey, context!.previousTodos);
