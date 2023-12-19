@@ -86,7 +86,13 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 									});
 								}}
 							/>
-							<label htmlFor={`check-${todo.id}`}>
+							<label
+								htmlFor={`check-${todo.id}`}
+								className={
+									todo.done
+										? "line-through text-gray-600"
+										: ""
+								}>
 								{todo.content}
 							</label>
 							<button
