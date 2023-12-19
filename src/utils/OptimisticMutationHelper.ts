@@ -1,8 +1,8 @@
 "use client";
 
 import type { TodoList } from "@/definitions";
-import { QueryClient } from "@tanstack/react-query";
-import { getQueryKey } from "@trpc/react-query";
+import type { QueryClient } from "@tanstack/react-query";
+import type { getQueryKey } from "@trpc/react-query";
 
 type nullableTodoList = TodoList | undefined;
 const OptimisticMutationHelper = async (
