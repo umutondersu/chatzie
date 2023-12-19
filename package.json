@@ -7,8 +7,10 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"db:push": "dotenv drizzle-kit push:sqlite",
-		"db:studio": "dotenv drizzle-kit studio"
+		"db:push": "cross-env NODE_ENV=development drizzle-kit push:sqlite",
+		"db:studio": "cross-env NODE_ENV=development drizzle-kit studio",
+		"db:push:prod": "cross-env NODE_ENV=production drizzle-kit push:sqlite",
+		"db:studio:prod": "cross-env NODE_ENV=production drizzle-kit studio"
 	},
 	"dependencies": {
 		"@clerk/nextjs": "^4.28.0",
@@ -35,6 +37,7 @@
 		"@types/react": "^18",
 		"@types/react-dom": "^18",
 		"autoprefixer": "^10.0.1",
+		"cross-env": "^7.0.3",
 		"eslint": "^8",
 		"eslint-config-next": "14.0.4",
 		"postcss": "^8",

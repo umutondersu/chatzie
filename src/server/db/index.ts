@@ -5,7 +5,10 @@ import { createClient } from "@libsql/client";
 import { env } from "@/env";
 
 const client = createClient({
-	url: env.DATABASE_URL,
+	url:
+		env.NODE_ENV === "development"
+			? env.DEV_DATABASE_URL
+			: env.DATABASE_URL,
 	authToken: env.DATABASE_AUTH_TOKEN,
 });
 const db = drizzle(client);

@@ -10,7 +10,10 @@ export default {
 	schema: "./src/server/db/schema.ts",
 	driver: "turso",
 	dbCredentials: {
-		url: env.DATABASE_URL,
+		url:
+			env.NODE_ENV === "development"
+				? env.DEV_DATABASE_URL
+				: env.DATABASE_URL,
 		authToken: env.DATABASE_AUTH_TOKEN,
 	},
 } satisfies Config;

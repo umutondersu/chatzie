@@ -7,6 +7,10 @@ export const env = createEnv({
 	 * Will throw if you access these variables on the client.
 	 */
 	server: {
+		NODE_ENV: z
+			.enum(["development", "test", "production"])
+			.default("development"),
+		DEV_DATABASE_URL: z.string().url().optional(),
 		DATABASE_URL: z.string().url(),
 		CLERK_SECRET_KEY: z.string(),
 		DATABASE_AUTH_TOKEN: z.string().min(1),
@@ -29,6 +33,8 @@ export const env = createEnv({
 	 * 💡 You'll get type errors if not all variables from `server` & `client` are included here.
 	 */
 	runtimeEnv: {
+		NODE_ENV: process.env.NODE_ENV,
+		DEV_DATABASE_URL: process.env.DEV_DATABASE_URL,
 		DATABASE_URL: process.env.DATABASE_URL,
 		DATABASE_AUTH_TOKEN: process.env.DATABASE_AUTH_TOKEN,
 		NEXT_PUBLIC_ENV: process.env.NEXT_PUBLIC_ENV,
