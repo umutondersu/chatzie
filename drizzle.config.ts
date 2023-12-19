@@ -12,7 +12,7 @@ export default {
 	dbCredentials: {
 		url:
 			env.NODE_ENV === "development"
-				? env.DEV_DATABASE_URL
+				? String(env.DEV_DATABASE_URL)
 				: env.DATABASE_URL,
 		authToken: env.DATABASE_AUTH_TOKEN,
 	},
