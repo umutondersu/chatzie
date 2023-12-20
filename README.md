@@ -1,6 +1,6 @@
 # Chatzie
 
-A todo app created with Next.js 14 and TRPC. Each authenticated user have their own Task list.
+A todo app created with Next.js 14 and TRPC. Each authenticated user have their own Task list with optmistic updates.
 
 ## Features
 
