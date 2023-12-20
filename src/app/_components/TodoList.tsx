@@ -110,7 +110,15 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 					</div>
 				)}
 			</div>
-			<div className="flex gap-3 items-center">
+			<form
+				onSubmit={async (e) => {
+					e.preventDefault();
+					if (content.length) {
+						addTodo.mutate(content);
+						setContent("");
+					}
+				}}
+				className="flex gap-3 items-center">
 				<label htmlFor="content">Content</label>
 				<input
 					id="content"
@@ -118,17 +126,13 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 					onChange={(e) => setContent(e.target.value)}
 					className="flex-grow text-black bg-white rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 px-4 py-2"
 				/>
+
 				<button
-					onClick={async () => {
-						if (content.length) {
-							addTodo.mutate(content);
-							setContent("");
-						}
-					}}
+					type="submit"
 					className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
 					Add Todo
 				</button>
-			</div>
+			</form>
 		</>
 	);
 }
