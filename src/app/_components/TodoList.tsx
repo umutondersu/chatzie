@@ -19,13 +19,13 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 	const QueryContext = { todosQueryKey, queryClient };
 
 	const addTodo = trpc.Todos.add.useMutation({
-		onMutate: async (newTodo) =>
+		onMutate: async () =>
 			OptimisticMutationHelper(QueryContext, (prevstate) => [
 				...prevstate,
 				{
 					id: "OPTIMISTIC_ID",
 					done: false,
-					content: newTodo,
+					content,
 					userid: "OPTIMISTIC_USERID",
 				},
 			]),
@@ -38,10 +38,10 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 	});
 
 	const setDone = trpc.Todos.setDone.useMutation({
-		onMutate: async ({ id, done }) =>
+		onMutate: async ({ id }) =>
 			OptimisticMutationHelper(QueryContext, (prevstate) =>
 				prevstate.map((todo) =>
-					todo.id === id ? { ...todo, done: !done } : todo
+					todo.id === id ? { ...todo, done: !todo.done } : todo
 				)
 			),
 		onError: (error, _newTodo, context) => {
@@ -54,9 +54,9 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 	});
 
 	const removeTodo = trpc.Todos.remove.useMutation({
-		onMutate: async (todoId) =>
+		onMutate: async ({ id }) =>
 			OptimisticMutationHelper(QueryContext, (prevstate) =>
-				prevstate.filter((todo) => todo.id !== todoId)
+				prevstate.filter((todo) => todo.id !== id)
 			),
 		onError: (_error, _newTodo, context) => {
 			queryClient.setQueryData(todosQueryKey, context!.previousTodos);
@@ -69,7 +69,7 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 	const [content, setContent] = useState("");
 
 	return (
-		<div>
+		<>
 			<div className="text-black my-5 text-3xl">
 				{Todos.data.length != 0 ? (
 					Todos.data.map((todo) => (
@@ -82,7 +82,7 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 								onChange={async () => {
 									setDone.mutate({
 										id: todo.id,
-										done: todo.done ? false : true,
+										done: !todo.done,
 									});
 								}}
 							/>
@@ -97,7 +97,7 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 							</label>
 							<button
 								onClick={() => {
-									removeTodo.mutate(todo.id);
+									removeTodo.mutate({ id: todo.id });
 								}}
 								className="bg-red-500 hover:bg-red-700 text-white font-bold rounded-full text-sm px-2">
 								Delete
@@ -129,6 +129,6 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 					Add Todo
 				</button>
 			</div>
-		</div>
+		</>
 	);
 }

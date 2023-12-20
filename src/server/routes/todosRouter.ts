@@ -41,13 +41,17 @@ const TodosRouter = router({
 			return true;
 		}),
 	remove: protectedProcedure
-		.input(z.string())
+		.input(
+			z.object({
+				id: z.string(),
+			})
+		)
 		.mutation(async ({ ctx, input }) => {
 			await ctx.db
 				.delete(table.todos)
 				.where(
 					and(
-						eq(table.todos.id, input),
+						eq(table.todos.id, input.id),
 						eq(table.todos.userid, ctx.userid)
 					)
 				);
