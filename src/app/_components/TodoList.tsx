@@ -2,25 +2,20 @@
 
 import { useState } from "react";
 import { trpc } from "../_trpc/client";
-import { useQueryClient } from "@tanstack/react-query";
-import { getQueryKey } from "@trpc/react-query";
 import type { TodoList } from "@/definitions";
 import OptimisticMutationHelper from "@/utils/OptimisticMutationHelper";
 
 export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
-	const queryClient = useQueryClient();
+	const utils = trpc.useUtils();
 	const Todos = trpc.Todos.get.useQuery(undefined, {
 		initialData: initialTodos,
 		refetchOnMount: false,
 		refetchOnReconnect: false,
 	});
 
-	const todosQueryKey = getQueryKey(trpc.Todos.get, undefined, "query");
-	const QueryContext = { todosQueryKey, queryClient };
-
 	const addTodo = trpc.Todos.add.useMutation({
 		onMutate: async () =>
-			OptimisticMutationHelper(QueryContext, (prevstate) => [
+			OptimisticMutationHelper(utils.Todos.get, (prevstate) => [
 				...prevstate,
 				{
 					id: "OPTIMISTIC_ID",
@@ -30,39 +25,40 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 				},
 			]),
 		onError: (_error, _newTodo, context) => {
-			queryClient.setQueryData(todosQueryKey, context!.previousTodos);
+			utils.Todos.get.setData(undefined, () => context!.previousTodos);
+			// queryClient.setQueryData(todosQueryKey, context!.previousTodos);
 		},
 		onSettled: () => {
-			queryClient.invalidateQueries(todosQueryKey);
+			utils.Todos.get.invalidate();
 		},
 	});
 
 	const setDone = trpc.Todos.setDone.useMutation({
 		onMutate: async ({ id }) =>
-			OptimisticMutationHelper(QueryContext, (prevstate) =>
+			OptimisticMutationHelper(utils.Todos.get, (prevstate) =>
 				prevstate.map((todo) =>
 					todo.id === id ? { ...todo, done: !todo.done } : todo
 				)
 			),
 		onError: (error, _newTodo, context) => {
 			alert(error.message);
-			queryClient.setQueryData(todosQueryKey, context!.previousTodos);
+			utils.Todos.get.setData(undefined, () => context!.previousTodos);
 		},
 		onSettled: () => {
-			queryClient.invalidateQueries(todosQueryKey);
+			utils.Todos.get.invalidate();
 		},
 	});
 
 	const removeTodo = trpc.Todos.remove.useMutation({
 		onMutate: async ({ id }) =>
-			OptimisticMutationHelper(QueryContext, (prevstate) =>
+			OptimisticMutationHelper(utils.Todos.get, (prevstate) =>
 				prevstate.filter((todo) => todo.id !== id)
 			),
 		onError: (_error, _newTodo, context) => {
-			queryClient.setQueryData(todosQueryKey, context!.previousTodos);
+			utils.Todos.get.setData(undefined, () => context!.previousTodos);
 		},
 		onSettled: () => {
-			queryClient.invalidateQueries(todosQueryKey);
+			utils.Todos.get.invalidate();
 		},
 	});
 

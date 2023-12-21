@@ -1,27 +1,16 @@
 "use client";
 
 import type { TodoList } from "@/definitions";
-import type { QueryClient } from "@tanstack/react-query";
-import type { getQueryKey } from "@trpc/react-query";
+import type { trpc } from "@/app/_trpc/client";
 
-type nullableTodoList = TodoList | undefined;
 const OptimisticMutationHelper = async (
-	{
-		queryClient,
-		todosQueryKey,
-	}: {
-		queryClient: QueryClient;
-		todosQueryKey: ReturnType<typeof getQueryKey>;
-	},
+	TodosQuery: ReturnType<typeof trpc.useUtils>["Todos"]["get"],
 	updateFunc: (todos: TodoList) => TodoList
-) => {
-	await queryClient.cancelQueries(todosQueryKey);
-	const previousTodos: nullableTodoList =
-		queryClient.getQueryData(todosQueryKey);
+): Promise<{ previousTodos: TodoList | undefined }> => {
+	await TodosQuery.cancel();
+	const previousTodos = TodosQuery.getData();
+	TodosQuery.setData(undefined, (prevstate) => updateFunc(prevstate!));
 
-	queryClient.setQueryData(todosQueryKey, (prevstate: nullableTodoList) =>
-		updateFunc(prevstate!)
-	);
 	return { previousTodos };
 };
 
