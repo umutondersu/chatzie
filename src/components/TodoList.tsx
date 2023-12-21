@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { trpc } from "../_trpc/client";
-import type { TodoList } from "@/types";
-import { OptimisticMutationHelper } from "@/utils";
+import { trpc } from "../lib/trpc/client";
+import type { TodoList } from "@/lib/types";
+import { OptimisticMutationHelper } from "@/lib/utils";
 
 export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 	const utils = trpc.useUtils();

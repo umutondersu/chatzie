@@ -1,6 +1,6 @@
 import { SignInButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
-import TodoListPanel from "@/app/_components/TodoListPanel";
+import TodoListPanel from "@/components/TodoListPanel";
 
 export default async function Home() {
 	const user = await currentUser();

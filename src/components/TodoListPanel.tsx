@@ -1,5 +1,5 @@
 import { SignOutButton } from "@clerk/nextjs";
-import { api } from "../_trpc/serverClient";
+import { api } from "../lib/trpc/serverClient";
 import TodoList from "./TodoList";
 
 export default async function TodoListPanel() {

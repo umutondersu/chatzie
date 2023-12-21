@@ -1,7 +1,5 @@
-"use client";
-
-import type { TodoList } from "@/types";
-import type { trpc } from "@/app/_trpc/client";
+import type { TodoList } from "@/lib/types";
+import type { trpc } from "../trpc/client";
 
 export const OptimisticMutationHelper = async (
 	TodosQuery: ReturnType<typeof trpc.useUtils>["Todos"]["get"],
