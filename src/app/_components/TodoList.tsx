@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { trpc } from "../_trpc/client";
-import type { TodoList } from "@/definitions";
-import OptimisticMutationHelper from "@/utils/OptimisticMutationHelper";
+import type { TodoList } from "@/types";
+import { OptimisticMutationHelper } from "@/utils";
 
 export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 	const utils = trpc.useUtils();
@@ -25,7 +25,7 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 				},
 			]),
 		onError: (_error, _newTodo, context) => {
-			utils.Todos.get.setData(undefined, () => context!.previousTodos);
+			utils.Todos.get.setData(undefined, context!.previousTodos);
 			// queryClient.setQueryData(todosQueryKey, context!.previousTodos);
 		},
 		onSettled: () => {
@@ -42,7 +42,7 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 			),
 		onError: (error, _newTodo, context) => {
 			alert(error.message);
-			utils.Todos.get.setData(undefined, () => context!.previousTodos);
+			utils.Todos.get.setData(undefined, context!.previousTodos);
 		},
 		onSettled: () => {
 			utils.Todos.get.invalidate();
@@ -55,7 +55,7 @@ export default function TodoList({ initialTodos }: { initialTodos: TodoList }) {
 				prevstate.filter((todo) => todo.id !== id)
 			),
 		onError: (_error, _newTodo, context) => {
-			utils.Todos.get.setData(undefined, () => context!.previousTodos);
+			utils.Todos.get.setData(undefined, context!.previousTodos);
 		},
 		onSettled: () => {
 			utils.Todos.get.invalidate();

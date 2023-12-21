@@ -1,9 +1,9 @@
 "use client";
 
-import type { TodoList } from "@/definitions";
+import type { TodoList } from "@/types";
 import type { trpc } from "@/app/_trpc/client";
 
-const OptimisticMutationHelper = async (
+export const OptimisticMutationHelper = async (
 	TodosQuery: ReturnType<typeof trpc.useUtils>["Todos"]["get"],
 	updateFunc: (todos: TodoList) => TodoList
 ): Promise<{ previousTodos: TodoList | undefined }> => {
@@ -13,5 +13,3 @@ const OptimisticMutationHelper = async (
 
 	return { previousTodos };
 };
-
-export default OptimisticMutationHelper;

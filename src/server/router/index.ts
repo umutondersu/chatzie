@@ -1,8 +1,8 @@
 import { router } from "../trpc";
-import TodosRouter from "./todosRouter";
+import Todos from "./todos";
 
 export const appRouter = router({
-	Todos: TodosRouter,
+	Todos,
 });
 
 export type AppRouter = typeof appRouter;
