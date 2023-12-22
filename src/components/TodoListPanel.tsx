@@ -1,9 +1,9 @@
 import { SignOutButton } from "@clerk/nextjs";
-import { api } from "../lib/trpc/serverClient";
+import serverCaller from "../lib/trpc/serverClient";
 import TodoList from "./TodoList";
 
 export default async function TodoListPanel() {
-	const todos = await api.Todos.get();
+	const todos = await serverCaller.Todos.get();
 	return (
 		<>
 			<TodoList initialTodos={todos} />
