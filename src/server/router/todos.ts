@@ -5,6 +5,7 @@ import { eq, and } from "drizzle-orm";
 
 const TodosRouter = router({
 	get: protectedProcedure.query(async ({ ctx }) => {
+		if (ctx.headers) ctx.headers.set("cache-control", "s-maxage=300");
 		return await ctx.db
 			.select()
 			.from(table.todos)

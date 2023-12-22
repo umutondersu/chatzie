@@ -2,7 +2,7 @@ import db from "./db";
 
 const createTRPCContext = ({ req }: { req?: Request } = {}) => {
 	return {
-		headers: req?.headers!,
+		headers: req?.headers,
 		db,
 	};
 };
