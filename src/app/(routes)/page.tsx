@@ -26,15 +26,15 @@ export default async function Home() {
 			<section className="relative top-10">
 				<div className="underline text-2xl mb-2">Technologies used</div>
 				<ul className="[&>*]:text-xl">
-					<li>- Next.js</li>
+					<li>- Next.js 14</li>
 					<li>- tRPC </li>
 					<li>
-						- React Query for State Management, data fetching and
-						caching
+						- React Query for State Management, Data Fetching and
+						Caching
 					</li>
 					<li>- Clerk for Authentication</li>
 					<li>- Turso for DB on the Edge</li>
-					<li>- Drizzle ORM</li>
+					<li>- Drizzle ORM & Kit</li>
 					<li>- Typescript</li>
 					<li>- TailwindCSS for styling</li>
 				</ul>
