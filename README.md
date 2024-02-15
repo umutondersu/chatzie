@@ -21,7 +21,7 @@ Typical edge runtime apps have to make requests to a non-edge database which nul
    - tRPC
    - React Query for State Management, Data Fetching and Caching
    - Clerk for Authentication
-   - Turso (Formerly Planetscale) for DB on the Edge
+   - Turso for DB on the Edge
    - Drizzle ORM & Kit
    - Typescript
    - TailwindCSS for styling
